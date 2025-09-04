@@ -1,4 +1,4 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import { ErrorRequestHandler, Request, Response } from 'express';
 import logger from '../utils/logger';
 
 interface CustomError {
@@ -6,12 +6,7 @@ interface CustomError {
   message?: string;
 }
 
-export const errorHandler: ErrorRequestHandler = (
-  err: unknown,
-  req: Request,
-  res: Response,
-  _next: NextFunction
-) => {
+export const errorHandler: ErrorRequestHandler = (err: unknown, req: Request, res: Response) => {
   const status =
     typeof err === 'object' && err !== null && 'status' in err
       ? ((err as CustomError).status ?? 500)

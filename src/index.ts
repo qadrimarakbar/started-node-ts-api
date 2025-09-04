@@ -3,6 +3,7 @@ import { ENV } from './config/env';
 import logger from './utils/logger';
 import fs from 'fs';
 import path from 'path';
+import { testConnection } from './config/database';
 
 // Create logs directory if it doesn't exist
 const now = new Date();
@@ -12,6 +13,19 @@ const logDirectory = path.join('logs', String(year), month);
 
 fs.mkdirSync(logDirectory, { recursive: true });
 
-app.listen(ENV.PORT, () => {
-  logger.info(`🚀 Server running on port ${ENV.PORT}`);
-});
+// Start the server
+const startServer = async () => {
+  try {
+    // Test database connection
+    await testConnection();
+
+    app.listen(ENV.PORT, () => {
+      logger.info(`🚀 Server running on port ${ENV.PORT}`);
+    });
+  } catch (error) {
+    logger.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();

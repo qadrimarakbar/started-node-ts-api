@@ -14,4 +14,11 @@ export const ENV = {
     CREDENTIALS: process.env.CORS_CREDENTIALS === 'true',
     MAX_AGE: parseInt(process.env.CORS_MAX_AGE || '86400', 10),
   },
+  DATABASE: {
+    HOST: process.env.DB_HOST || 'localhost',
+    USER: process.env.DB_USER || 'root',
+    PASSWORD: process.env.DB_PASSWORD || '',
+    NAME: process.env.DB_NAME || 'node_api_db',
+    PORT: parseInt(process.env.DB_PORT || '3306', 10),
+  },
 };

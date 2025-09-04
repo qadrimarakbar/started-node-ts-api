@@ -1,25 +1,46 @@
 import { Request, Response } from 'express';
 import { UserService } from './user.service';
 import { failure, success } from '../../utils/response';
+import logger from '../../utils/logger';
 
 const service = new UserService();
 
 export class UserController {
-  static getAll(req: Request, res: Response) {
-    return res.json(success(service.getAll()));
+  static async getAll(req: Request, res: Response) {
+    try {
+      const users = await service.getAll();
+      return res.json(success(users));
+    } catch (error) {
+      logger.error('Error in getAll controller:', error);
+      return res.status(500).json(failure('Failed to retrieve users', 500));
+    }
   }
 
-  static getById(req: Request, res: Response) {
-    const user = service.getById(Number(req.params.id));
-    if (!user) return res.status(404).json(failure('User not found'));
+  static async getById(req: Request, res: Response) {
+    try {
+      const user = await service.getById(Number(req.params.id));
+      if (!user) return res.status(404).json(failure('User not found'));
 
-    return res.json(success(user));
+      return res.json(success(user));
+    } catch (error) {
+      logger.error('Error in getById controller:', error);
+      return res.status(500).json(failure('Failed to retrieve user', 500));
+    }
   }
 
-  static create(req: Request, res: Response) {
-    const { id, name, email } = req.body;
-    const user = service.create({ id, name, email });
+  static async create(req: Request, res: Response) {
+    try {
+      const { name, email } = req.body;
 
-    return res.status(201).json(success(user, 'User created'));
+      if (!name || !email) {
+        return res.status(400).json(failure('Name and email are required'));
+      }
+
+      const user = await service.create({ id: 0, name, email });
+      return res.status(201).json(success(user, 'User created'));
+    } catch (error) {
+      logger.error('Error in create controller:', error);
+      return res.status(500).json(failure('Failed to create user', 500));
+    }
   }
 }

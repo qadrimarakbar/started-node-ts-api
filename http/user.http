@@ -1,0 +1,17 @@
+@baseUrl = http://localhost:3000/api/v1
+@exampleId = 1
+
+###
+GET {{baseUrl}}/users
+
+###
+GET {{baseUrl}}/users/{{exampleId}}
+
+###
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Qadri",
+  "email": "qadri@mail.com"
+}
