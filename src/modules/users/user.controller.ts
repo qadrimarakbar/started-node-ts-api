@@ -1,13 +1,11 @@
 import { Request, Response } from 'express';
 import { UserService } from './user.service';
 import { failure, success } from '../../utils/response';
-import logger from '../../utils/logger';
 
 const service = new UserService();
 
 export class UserController {
   static getAll(req: Request, res: Response) {
-    logger.info('Get all user data..');
     return res.json(success(service.getAll()));
   }
 
