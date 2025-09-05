@@ -27,20 +27,4 @@ export class UserController {
       return res.status(500).json(failure('Failed to retrieve user', 500));
     }
   }
-
-  static async create(req: Request, res: Response) {
-    try {
-      const { name, email } = req.body;
-
-      if (!name || !email) {
-        return res.status(400).json(failure('Name and email are required'));
-      }
-
-      const user = await service.create({ id: 0, name, email });
-      return res.status(201).json(success(user, 'User created'));
-    } catch (error) {
-      logger.error('Error in create controller:', error);
-      return res.status(500).json(failure('Failed to create user', 500));
-    }
-  }
 }

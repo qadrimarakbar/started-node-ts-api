@@ -27,20 +27,4 @@ export class UserService {
       throw error;
     }
   }
-
-  async create(user: User): Promise<User> {
-    try {
-      const sql = 'INSERT INTO users (name, email) VALUES (?, ?)';
-      const result = await query<{ insertId: number }>(sql, [user.name, user.email]);
-
-      return {
-        id: result.insertId,
-        name: user.name,
-        email: user.email,
-      };
-    } catch (error) {
-      logger.error('Error creating user in database:', error);
-      throw error;
-    }
-  }
 }
