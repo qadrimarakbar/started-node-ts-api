@@ -1,0 +1,55 @@
+### Auth API Tests (Cookie Authentication)
+
+# Variables
+@baseUrl = http://localhost:3000/api/v1
+
+### Register a new user (will set httpOnly cookie)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "Password123"
+}
+
+### Register with invalid data (validation test)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "J",
+  "email": "invalid-email",
+  "password": "weak"
+}
+
+### Login with valid credentials (will set httpOnly cookie)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "Password123"
+}
+
+### Login with invalid credentials
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "wrongpassword"
+}
+
+### Get current user profile (uses cookie automatically)
+GET {{baseUrl}}/auth/me
+
+### Logout (clears the cookie)
+POST {{baseUrl}}/auth/logout
+
+### Try to access protected route after logout (should fail)
+GET {{baseUrl}}/auth/me
+
+### Test with Bearer token (fallback support)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer your-jwt-token-here

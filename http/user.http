@@ -6,12 +6,3 @@ GET {{baseUrl}}/users
 
 ###
 GET {{baseUrl}}/users/{{exampleId}}
-
-###
-POST {{baseUrl}}/users
-Content-Type: application/json
-
-{
-  "name": "Qadri",
-  "email": "qadri@mail.com"
-}
