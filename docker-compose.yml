@@ -1,0 +1,97 @@
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: nodejs-api-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: node_api_db
+      MYSQL_USER: apiuser
+      MYSQL_PASSWORD: apipassword
+    ports:
+      - '3307:3306' # Map ke port 3307 di host untuk avoid conflict
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    networks:
+      - nodejs-api-network
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+      interval: 10s
+      start_period: 40s
+
+  # Node.js API Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: nodejs-api
+    restart: unless-stopped
+    environment:
+      # Application
+      NODE_ENV: production
+      PORT: 3000
+
+      # JWT
+      JWT_SECRET: your-super-secret-jwt-key-change-this-in-production
+
+      # Database
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: apiuser
+      DB_PASSWORD: apipassword
+      DB_NAME: node_api_db
+
+      # CORS
+      CORS_ORIGIN: http://localhost:3000,http://localhost:3001
+      CORS_METHODS: GET,POST,PUT,DELETE,PATCH
+      CORS_ALLOWED_HEADERS: Content-Type,Authorization
+      CORS_CREDENTIALS: true
+      CORS_MAX_AGE: 86400
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./logs:/app/logs # Mount logs directory
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - nodejs-api-network
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })",
+        ]
+      timeout: 10s
+      retries: 3
+      interval: 30s
+      start_period: 10s
+
+  # Adminer untuk database management (optional)
+  adminer:
+    image: adminer:4
+    container_name: nodejs-api-adminer
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mysql
+    networks:
+      - nodejs-api-network
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  nodejs-api-network:
+    driver: bridge

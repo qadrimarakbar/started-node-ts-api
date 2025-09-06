@@ -23,6 +23,17 @@ app.use(compression());
 app.use(express.json());
 app.use(cookieParser()); // Add cookie parser
 
+// Health check endpoint untuk Docker
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development',
+    version: process.env.npm_package_version || '1.0.0',
+  });
+});
+
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);

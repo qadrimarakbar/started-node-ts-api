@@ -1,0 +1,26 @@
+# Development Dockerfile untuk hot reload
+FROM node:18-alpine
+
+# Install dumb-init
+RUN apk add --no-cache dumb-init
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including devDependencies)
+RUN npm install
+
+# Expose port
+EXPOSE 3000
+
+# Create logs directory
+RUN mkdir -p logs
+
+# Use dumb-init untuk proper signal handling
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start development server dengan nodemon dan polling untuk Windows
+CMD ["npx", "nodemon", "--watch", "src", "--ext", "ts,js,json", "--legacy-watch", "src/index.ts"]

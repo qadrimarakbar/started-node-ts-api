@@ -57,6 +57,9 @@ export class AuthController {
 
   async login(req: Request, res: Response): Promise<void> {
     try {
+      // 🔥 HOT RELOAD TEST v2 - File changed again!
+      logger.info('� UPDATED: Hot reload test v2 - Login endpoint accessed!');
+
       // Validate request body
       const { error, value } = loginSchema.validate(req.body);
       if (error) {
@@ -83,7 +86,7 @@ export class AuthController {
       res.status(200).json(successResponse('Login successful', userResult));
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'Invalid email or password') {
+        if (error.message === 'Invalid email or password.....') {
           logger.warn(`Login failed ${req.body.email}: ${error.message}`);
           res.status(401).json(errorResponse(error.message));
           return;
