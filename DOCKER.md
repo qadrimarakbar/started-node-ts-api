@@ -109,10 +109,20 @@ REM etc...
    - Port: 3307 (mapped from 3306)
    - Credentials: `apiuser` / `apipassword`
 
-3. **Adminer** (`adminer`)
-   - Database management interface
+3. **MongoDB Database** (`mongodb`)
+   - MongoDB 7.0
+   - Port: 27017
+   - Credentials: `admin` / `adminpassword`
+
+4. **Adminer** (`adminer`)
+   - MySQL database management interface
    - Port: 8080
    - URL: http://localhost:8080
+
+5. **Mongo Express** (`mongo-express`)
+   - MongoDB management interface
+   - Port: 8081
+   - URL: http://localhost:8081
 
 ### Networks
 
@@ -121,8 +131,9 @@ REM etc...
 
 ### Volumes
 
-- `mysql_data` - Production database data
-- `mysql_dev_data` - Development database data
+- `mysql_data` / `mysql_dev_data` - MySQL database data
+- `mongodb_data` / `mongodb_dev_data` - MongoDB database data
+- `mongodb_config` / `mongodb_dev_config` - MongoDB configuration
 - `./logs:/app/logs` - Application logs
 
 ## 🔧 Configuration
@@ -138,19 +149,31 @@ Environment variables dapat dikonfigurasi di:
 Key variables:
 
 ```bash
+# Application
 NODE_ENV=production
 PORT=3000
 JWT_SECRET=your-secret-key
+
+# MySQL Database
 DB_HOST=mysql
 DB_PORT=3306
 DB_USER=apiuser
 DB_PASSWORD=apipassword
 DB_NAME=node_api_db
+
+# MongoDB Database
+MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/node_api_mongo_db?authSource=admin
+MONGODB_HOST=mongodb
+MONGODB_PORT=27017
+MONGODB_USER=admin
+MONGODB_PASSWORD=adminpassword
+MONGODB_DATABASE=node_api_mongo_db
 ```
 
 ### Database
 
-Database schema akan otomatis di-import dari `database/schema.sql` saat container pertama kali dijalankan.
+- **MySQL**: Database schema akan otomatis di-import dari `database/schema.sql` saat container pertama kali dijalankan.
+- **MongoDB**: Database akan dibuat otomatis saat aplikasi pertama kali connect.
 
 ## 📊 Monitoring
 
@@ -160,6 +183,7 @@ Semua services memiliki health check:
 
 - **API**: `GET /health`
 - **MySQL**: `mysqladmin ping`
+- **MongoDB**: `mongosh --eval 'db.adminCommand("ping")'`
 
 ### Logs
 
@@ -170,6 +194,7 @@ docker-compose logs -f
 # View specific service logs
 docker-compose logs -f api
 docker-compose logs -f mysql
+docker-compose logs -f mongodb
 
 # Using script
 ./docker-scripts.ps1 logs
@@ -202,7 +227,8 @@ docker-compose ps
 
 # The application will be available at:
 # - API: http://localhost:3000
-# - Adminer: http://localhost:8080
+# - MySQL Adminer: http://localhost:8080
+# - MongoDB Express: http://localhost:8081
 # - Health check: http://localhost:3000/health
 ```
 
@@ -226,6 +252,7 @@ docker-compose ps
    # Check what's using the port
    netstat -ano | findstr :3000
    netstat -ano | findstr :3307
+   netstat -ano | findstr :27017
    ```
 
 2. **Permission issues**
@@ -241,12 +268,17 @@ docker-compose ps
    # Check logs
    docker-compose logs api
    docker-compose logs mysql
+   docker-compose logs mongodb
    ```
 
 4. **Database connection issues**
+
    ```bash
    # Wait for MySQL to be ready
    docker-compose logs mysql | grep "ready for connections"
+
+   # Wait for MongoDB to be ready
+   docker-compose logs mongodb | grep "Waiting for connections"
    ```
 
 ### Clean Up

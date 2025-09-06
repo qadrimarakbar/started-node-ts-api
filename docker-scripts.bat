@@ -48,7 +48,8 @@ echo Starting production containers...
 docker-compose up -d
 echo ✅ Containers started!
 echo 🌐 API: http://localhost:3000
-echo 🗃️  Adminer: http://localhost:8080
+echo 🗃️  MySQL Adminer: http://localhost:8080
+echo 🍃 MongoDB Express: http://localhost:8081
 goto end
 
 :down
@@ -74,7 +75,8 @@ echo Starting development environment...
 docker-compose -f docker-compose.dev.yml up -d
 echo ✅ Development environment started!
 echo 🌐 API: http://localhost:3000
-echo 🗃️  Adminer: http://localhost:8080
+echo 🗃️  MySQL Adminer: http://localhost:8080
+echo 🍃 MongoDB Express: http://localhost:8081
 echo 📁 Source code akan auto-reload saat ada perubahan
 goto end
 
@@ -84,7 +86,8 @@ docker-compose build --no-cache
 docker-compose up -d
 echo ✅ Production environment started!
 echo 🌐 API: http://localhost:3000
-echo 🗃️  Adminer: http://localhost:8080
+echo 🗃️  MySQL Adminer: http://localhost:8080
+echo 🍃 MongoDB Express: http://localhost:8081
 goto end
 
 :clean

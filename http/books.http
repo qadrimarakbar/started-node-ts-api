@@ -1,0 +1,123 @@
+### Book API Testing
+
+# Variables
+@baseUrl = http://localhost:3000/api/v1
+@bookId =
+
+### Create a new book
+POST {{baseUrl}}/books
+Content-Type: application/json
+
+{
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "description": "A classic American novel set in the Jazz Age",
+  "isbn": "978-0-7432-7356-5",
+  "publishedYear": 1925,
+  "genre": "Fiction",
+  "price": 12.99,
+  "stock": 50
+}
+
+### Create another book
+POST {{baseUrl}}/books
+Content-Type: application/json
+
+{
+  "title": "To Kill a Mockingbird",
+  "author": "Harper Lee",
+  "description": "A novel about racial injustice and childhood innocence",
+  "isbn": "978-0-06-112008-4",
+  "publishedYear": 1960,
+  "genre": "Fiction",
+  "price": 14.99,
+  "stock": 30
+}
+
+### Create a book without ISBN
+POST {{baseUrl}}/books
+Content-Type: application/json
+
+{
+  "title": "1984",
+  "author": "George Orwell",
+  "description": "A dystopian social science fiction novel",
+  "publishedYear": 1949,
+  "genre": "Science Fiction",
+  "price": 13.99,
+  "stock": 25
+}
+
+### Get all books
+GET {{baseUrl}}/books
+
+### Get all books with pagination
+GET {{baseUrl}}/books?page=1&limit=5
+
+### Get all books with filters
+GET {{baseUrl}}/books?genre=Fiction&minPrice=10&maxPrice=20
+
+### Get all books by title search
+GET {{baseUrl}}/books?title=great
+
+### Get all books by author search
+GET {{baseUrl}}/books?author=Fitzgerald
+
+### Search books
+GET {{baseUrl}}/books/search?q=dystopian
+
+### Get books by genre
+GET {{baseUrl}}/books/genre/Fiction
+
+### Get books by author
+GET {{baseUrl}}/books/author/Harper Lee
+
+### Get book by ID (replace with actual ID)
+GET {{baseUrl}}/books/{{bookId}}
+
+### Update book (replace with actual ID)
+PUT {{baseUrl}}/books/{{bookId}}
+Content-Type: application/json
+
+{
+  "title": "The Great Gatsby - Updated Edition",
+  "price": 15.99,
+  "stock": 60
+}
+
+### Update book stock (replace with actual ID)
+PATCH {{baseUrl}}/books/{{bookId}}/stock
+Content-Type: application/json
+
+{
+  "quantity": 10
+}
+
+### Delete book (replace with actual ID)
+DELETE {{baseUrl}}/books/{{bookId}}
+
+### Test validation - Create book with invalid data
+POST {{baseUrl}}/books
+Content-Type: application/json
+
+{
+  "title": "",
+  "author": "",
+  "isbn": "invalid-isbn",
+  "publishedYear": 3000,
+  "price": -10,
+  "stock": -5
+}
+
+### Test validation - Invalid book ID
+GET {{baseUrl}}/books/invalid-id
+
+### Test duplicate ISBN
+POST {{baseUrl}}/books
+Content-Type: application/json
+
+{
+  "title": "Another Book",
+  "author": "Another Author",
+  "isbn": "978-0-7432-7356-5"
+}

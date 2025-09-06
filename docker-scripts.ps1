@@ -43,7 +43,8 @@ switch ($Command) {
         docker-compose up -d
         Write-Host "Containers started!"
         Write-Host "API: http://localhost:3000"
-        Write-Host "Adminer: http://localhost:8080"
+        Write-Host "MySQL Adminer: http://localhost:8080"
+        Write-Host "MongoDB Express: http://localhost:8081"
     }
 
     "down" {
@@ -69,7 +70,8 @@ switch ($Command) {
         docker-compose -f docker-compose.dev.yml up -d
         Write-Host "Development environment started!"
         Write-Host "API: http://localhost:3000"
-        Write-Host "Adminer: http://localhost:8080"
+        Write-Host "MySQL Adminer: http://localhost:8080"
+        Write-Host "MongoDB Express: http://localhost:8081"
         Write-Host "Source code akan auto-reload saat ada perubahan"
     }
 
@@ -79,7 +81,8 @@ switch ($Command) {
         docker-compose up -d
         Write-Host "Production environment started!"
         Write-Host "API: http://localhost:3000"
-        Write-Host "Adminer: http://localhost:8080"
+        Write-Host "MySQL Adminer: http://localhost:8080"
+        Write-Host "MongoDB Express: http://localhost:8081"
     }
 
     "clean" {

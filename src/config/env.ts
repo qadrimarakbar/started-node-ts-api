@@ -21,4 +21,12 @@ export const ENV = {
     NAME: process.env.DB_NAME || 'node_api_db',
     PORT: parseInt(process.env.DB_PORT || '3306', 10),
   },
+  MONGODB: {
+    URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/node_api_mongo_db_dev',
+    HOST: process.env.MONGODB_HOST || 'localhost',
+    PORT: parseInt(process.env.MONGODB_PORT || '27017', 10),
+    USER: process.env.MONGODB_USER || '',
+    PASSWORD: process.env.MONGODB_PASSWORD || '',
+    DATABASE: process.env.MONGODB_DATABASE || 'node_api_mongo_db_dev',
+  },
 };

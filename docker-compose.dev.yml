@@ -23,6 +23,29 @@ services:
       interval: 10s
       start_period: 40s
 
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: nodejs-api-mongodb-dev
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: adminpassword
+      MONGO_INITDB_DATABASE: node_api_mongo_db_dev
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_dev_data:/data/db
+      - mongodb_dev_config:/data/configdb
+    networks:
+      - nodejs-api-dev-network
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', 'db.adminCommand("ping")']
+      timeout: 10s
+      retries: 5
+      interval: 10s
+      start_period: 40s
+
   # Node.js API Application (Development)
   api-dev:
     build:
@@ -30,20 +53,18 @@ services:
       dockerfile: Dockerfile.dev
     container_name: nodejs-api-dev
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      # Application
+      # Override untuk Docker Development
       NODE_ENV: development
-      PORT: 3000
-
-      # JWT
-      JWT_SECRET: dev-jwt-secret-key
-
-      # Database
       DB_HOST: mysql
-      DB_PORT: 3306
       DB_USER: apiuser
       DB_PASSWORD: apipassword
-      DB_NAME: node_api_db
+      MONGODB_URI: mongodb://admin:adminpassword@mongodb:27017/node_api_mongo_db?authSource=admin
+      MONGODB_HOST: mongodb
+      MONGODB_PASSWORD: adminpassword
+      MONGODB_DATABASE: node_api_mongo_db_dev
 
       # CORS
       CORS_ORIGIN: http://localhost:3000,http://localhost:3001
@@ -60,6 +81,25 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    networks:
+      - nodejs-api-dev-network
+
+  # Mongo Express untuk MongoDB management
+  mongo-express:
+    image: mongo-express:1.0.2
+    container_name: nodejs-api-mongo-express-dev
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: adminpassword
+      ME_CONFIG_MONGODB_URL: mongodb://admin:adminpassword@mongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+    ports:
+      - '8081:8081'
+    depends_on:
+      - mongodb
     networks:
       - nodejs-api-dev-network
 
@@ -79,6 +119,10 @@ services:
 
 volumes:
   mysql_dev_data:
+    driver: local
+  mongodb_dev_data:
+    driver: local
+  mongodb_dev_config:
     driver: local
 
 networks:

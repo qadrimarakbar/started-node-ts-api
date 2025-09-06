@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { errorHandler } from './middleware/errorHandler';
 import userRoutes from './modules/users/user.route';
 import authRoutes from './modules/auth/auth.route';
+import bookRoutes from './modules/books/book.route';
 import { routeNotFound } from './utils/response';
 import corsOptions from './config/cors';
 
@@ -37,6 +38,7 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/books', bookRoutes);
 
 // 404 Handler - Place it after all routes
 app.use((req, res) => {

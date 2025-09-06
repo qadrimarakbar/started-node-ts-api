@@ -4,6 +4,7 @@ import logger from './utils/logger';
 import fs from 'fs';
 import path from 'path';
 import { testConnection } from './config/database';
+import { mongoDatabase } from './config/mongodb';
 
 // Create logs directory if it doesn't exist
 const now = new Date();
@@ -16,8 +17,11 @@ fs.mkdirSync(logDirectory, { recursive: true });
 // Start the server
 const startServer = async () => {
   try {
-    // Test database connection
+    // Test MySQL database connection
     await testConnection();
+
+    // Connect to MongoDB
+    await mongoDatabase.connect();
 
     app.listen(ENV.PORT, () => {
       logger.info(`🚀 Server running on port ${ENV.PORT}`);
