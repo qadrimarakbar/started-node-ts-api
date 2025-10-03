@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
     return;
   }
 
-  await knex.schema.createTable('users', (table) => {
+  await knex.schema.createTable('users', table => {
     table.increments('id').primary();
     table.string('name', 50).notNullable();
     table.string('email', 100).notNullable().unique();
@@ -23,3 +23,8 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists('users');
 }
+
+// "include": [
+//     "src",
+//     "database/migrations/**/*.ts"
+//   ]

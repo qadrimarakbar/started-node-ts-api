@@ -10,7 +10,7 @@ services:
       MYSQL_USER: apiuser
       MYSQL_PASSWORD: apipassword
     ports:
-      - '3307:3306' # Map ke port 3307 di host untuk avoid conflict
+      - '3306:3306' # Map ke port 3306 di host agar sesuai .env
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
