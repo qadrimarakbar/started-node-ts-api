@@ -13,7 +13,6 @@ services:
       - '3307:3306'
     volumes:
       - mysql_dev_data:/var/lib/mysql
-      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     networks:
       - nodejs-api-dev-network
     healthcheck:

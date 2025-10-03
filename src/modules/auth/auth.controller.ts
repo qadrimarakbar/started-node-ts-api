@@ -4,6 +4,7 @@ import { LoginRequest, RegisterRequest } from './auth.model';
 import { loginSchema, registerSchema } from './auth.validation';
 import { errorResponse, successResponse } from '../../utils/response';
 import logger from '../../utils/logger';
+import InvalidCredentialsError from './auth.error';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -57,9 +58,6 @@ export class AuthController {
 
   async login(req: Request, res: Response): Promise<void> {
     try {
-      // 🔥 HOT RELOAD TEST v2 - File changed again!
-      logger.info('� UPDATED: Hot reload test v2 - Login endpoint accessed!');
-
       // Validate request body
       const { error, value } = loginSchema.validate(req.body);
       if (error) {
@@ -85,12 +83,16 @@ export class AuthController {
       const userResult = { user: result.user };
       res.status(200).json(successResponse('Login successful', userResult));
     } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === 'Invalid email or password.....') {
-          logger.warn(`Login failed ${req.body.email}: ${error.message}`);
-          res.status(401).json(errorResponse(error.message));
-          return;
-        }
+      if (error instanceof InvalidCredentialsError) {
+        logger.warn(`Login failed ${req.body.email}: ${error.message}`);
+        res.status(401).json(errorResponse(error.message));
+        return;
+      }
+
+      if (error instanceof Error && error.message === 'Invalid email or password') {
+        logger.warn(`Login failed ${req.body.email}: ${error.message}`);
+        res.status(401).json(errorResponse(error.message));
+        return;
       }
 
       logger.error('Login error:', error);

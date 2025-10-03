@@ -172,7 +172,12 @@ MONGODB_DATABASE=node_api_mongo_db
 
 ### Database
 
-- **MySQL**: Database schema akan otomatis di-import dari `database/schema.sql` saat container pertama kali dijalankan.
+- **MySQL**: Gunakan migrasi Knex untuk membangun/menjaga skema. Setelah service berjalan, jalankan:
+
+  ```bash
+  docker compose exec api npm run db:migrate
+  ```
+
 - **MongoDB**: Database akan dibuat otomatis saat aplikasi pertama kali connect.
 
 ## 📊 Monitoring

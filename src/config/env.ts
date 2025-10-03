@@ -4,6 +4,7 @@ dotenv.config();
 export const ENV = {
   PORT: process.env.PORT || 3000,
   JWT_SECRET: process.env.JWT_SECRET || 'supersecret',
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '1h',
   CORS: {
     ORIGIN: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
     METHODS: process.env.CORS_METHODS?.split(',') || ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],

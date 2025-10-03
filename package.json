@@ -4,7 +4,10 @@
   "scripts": {
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "db:migrate": "node -r ts-node/register ./node_modules/knex/bin/cli.js migrate:latest --knexfile knexfile.ts",
+    "db:rollback": "node -r ts-node/register ./node_modules/knex/bin/cli.js migrate:rollback --knexfile knexfile.ts",
+    "db:migrate:make": "node -r ts-node/register ./node_modules/knex/bin/cli.js migrate:make --knexfile knexfile.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +24,7 @@
     "helmet": "^8.1.0",
     "joi": "^18.0.1",
     "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
     "mongoose": "^8.18.0",
     "mysql2": "^3.14.4",
     "winston": "^3.17.0"

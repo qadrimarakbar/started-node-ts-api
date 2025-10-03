@@ -56,22 +56,22 @@ CORS_MAX_AGE=86400
 
 ### 3. Database Setup
 
-**Option A: Docker (Recommended)**
+1. Pastikan MySQL berjalan dan kredensial di `.env` sesuai.
+2. Buat database (jika belum ada):
 
-```bash
-./docker-scripts.ps1 dev
-```
+   ```bash
+   mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS node_api_db;"
+   ```
 
-**Option B: Manual**
+3. Jalankan migrasi Knex untuk membangun skema:
 
-```bash
-# MySQL
-mysql -u root -p
-CREATE DATABASE node_api_db;
-mysql -u root -p node_api_db < database/schema.sql
+   ```bash
+   npm run db:migrate
+   ```
 
-# MongoDB - akan otomatis dibuat
-```
+   Gunakan `npm run db:rollback` jika perlu membatalkan migrasi terakhir.
+
+> **TIP:** Jika memakai Docker, `./docker-scripts.ps1 dev` tetap bisa digunakan untuk menyiapkan service MySQL/MongoDB sebelum menjalankan migrasi.
 
 ### 4. Run Application
 
